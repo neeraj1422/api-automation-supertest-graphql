@@ -6,7 +6,7 @@
     "test": "mocha",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "convert:xray": "ts-node convert-to-xray.ts testres.json"
+    "convert:xray": "ts-node convert-to-xray.ts ./report/index.json"
   },
   "keywords": [],
   "license": "ISC",

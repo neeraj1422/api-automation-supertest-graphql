@@ -1,56 +1,44 @@
 import fs from 'fs';
 
-// Helper to offset ISO date by milliseconds
-function offsetDate(start: string, offsetMs: number): string {
-    return new Date(new Date(start).getTime() + offsetMs).toISOString();
+// Remove milliseconds from ISO timestamp
+function toSimpleUtcIso(date: string | Date): string {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) {
+        throw new Error(`Invalid date: ${date}`);
+    }
+    return d.toISOString().split('.')[0] + 'Z';
 }
 
-interface MochawesomeTest {
-    title: string;
-    state: string;
-    duration: number;
-    pending?: boolean;
+// Map status to Xray Server/DC format
+function mapStatus(state: string): string {
+    return state === 'passed' ? 'PASS' :
+        state === 'failed' ? 'FAIL' :
+            'TODO';
 }
 
-interface MochawesomeSuite {
-    tests: MochawesomeTest[];
-    suites: MochawesomeSuite[];
-}
-
-interface MochawesomeResult {
-    suites: MochawesomeSuite[];
-}
-
-interface MochawesomeJSON {
-    stats: {
-        start: string;
-        end: string;
-    };
-    results: MochawesomeResult[];
-}
-
-function extractXrayResults(mochaJsonPath: string, outputPath = './xray-execution.json') {
+function extractXrayResults(
+    mochaJsonPath: string,
+    outputPath = './xray-execution.json'
+) {
     const raw = fs.readFileSync(mochaJsonPath, 'utf-8');
-    const mocha: MochawesomeJSON = JSON.parse(raw);
+    const mocha = JSON.parse(raw);
 
-    const executionStart = mocha.stats.start;
-    const executionEnd = mocha.stats.end;
+    const executionStart = toSimpleUtcIso(mocha.stats.start);
+    const executionEnd = toSimpleUtcIso(mocha.stats.end);
 
     const tests: any[] = [];
 
-    mocha.results.forEach(result => {
-        result.suites.forEach(suite => {
-            suite.tests.forEach(test => {
+    mocha.results.forEach((result: any) => {
+        result.suites.forEach((suite: any) => {
+            suite.tests.forEach((test: any) => {
                 const match = test.title.match(/(TEST-\d+)/i);
                 if (!match) return;
 
                 const testKey = match[1];
-                const status = test.state === 'passed' ? 'PASSED' :
-                    test.state === 'failed' ? 'FAILED' :
-                        test.pending ? 'TODO' : 'UNKNOWN';
+                const status = mapStatus(test.state);
 
-                const start = offsetDate(executionStart, 0);
-                const finish = offsetDate(executionStart, test.duration || 1000);
+                const start = executionStart;
+                const finish = toSimpleUtcIso(new Date(mocha.stats.start).getTime() + (test.duration || 1000));
 
                 tests.push({
                     testKey,
@@ -76,14 +64,15 @@ function extractXrayResults(mochaJsonPath: string, outputPath = './xray-executio
     };
 
     fs.writeFileSync(outputPath, JSON.stringify(xrayResult, null, 2));
-    console.log(`✅ Xray execution JSON created: ${outputPath}`);
+    console.log(`✅ Xray DC execution JSON created: ${outputPath}`);
 }
 
-// CLI usage
+// CLI usage: node convert-to-xray.ts <mochawesome.json>
 if (require.main === module) {
     const inputFile = process.argv[2];
+
     if (!inputFile) {
-        console.error('Usage: ts-node convert-to-xray.ts <mochawesome.json>');
+        console.error('❌ Usage: ts-node convert-to-xray.ts <mochawesome.json>');
         process.exit(1);
     }
 
