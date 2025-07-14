@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "testKey": "TEST-123",
+      "status": "FAIL",
+      "comment": "Executed by Mocha test: TEST-123:should create a post",
+      "start": "2025-07-14T04:18:38Z",
+      "finish": "2025-07-14T04:18:39Z",
+      "evidence": []
+    },
+    {
+      "testKey": "TEST-567",
+      "status": "FAIL",
+      "comment": "Executed by Mocha test: TEST-567:should get the post",
+      "start": "2025-07-14T04:18:38Z",
+      "finish": "2025-07-14T04:18:38Z",
+      "evidence": []
+    }
+  ],
+  "info": {
+    "summary": "",
+    "description": "",
+    "startDate": "2025-07-14T04:18:38Z",
+    "finishDate": "2025-07-14T04:18:39Z",
+    "testEnvironments": [
+      "dev"
+    ]
+  }
+}

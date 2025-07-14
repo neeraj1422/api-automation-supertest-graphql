@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-// Remove milliseconds from ISO timestamp
 function toSimpleUtcIso(date: string | Date): string {
     const d = new Date(date);
     if (isNaN(d.getTime())) {
@@ -18,7 +17,7 @@ function mapStatus(state: string): string {
 
 function extractXrayResults(
     mochaJsonPath: string,
-    outputPath = './xray-execution.json'
+    outputPath = './report/xray-execution.json'
 ) {
     const raw = fs.readFileSync(mochaJsonPath, 'utf-8');
     const mocha = JSON.parse(raw);
@@ -51,15 +50,15 @@ function extractXrayResults(
             });
         });
     });
-
+    const envFromCLI = process.env.ENV || 'dev';
     const xrayResult = {
         tests,
         info: {
-            summary: "Mocha Automated Test Execution - GraphQL",
-            description: "Imported from Mochawesome JSON",
+            summary: "",
+            description: "",
             startDate: executionStart,
             finishDate: executionEnd,
-            testEnvironments: ["TEST"]
+            testEnvironments: [envFromCLI]
         }
     };
 
