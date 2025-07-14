@@ -9,7 +9,7 @@ config();
 
 
 describe('test graphql sample', () => {
-    it('should create a post', async () => {
+    it.only('TEST-123:should create a post', async () => {
         const title = 'Sample Post Title';
         const body = 'Sample post body content.';
         // const title = String(faker.lorem.sentence());
@@ -18,7 +18,7 @@ describe('test graphql sample', () => {
         expect(response.statusCode).equal(200);
         expect(response.body.data).not.undefined;
     });
-    it('should get the post', async () => {
+    it.only('TEST-567:should get the post', async () => {
         const response = await queryGraphQl(queryPost);
         expect(response.statusCode).equal(200);
         const responseData = response.body.data;

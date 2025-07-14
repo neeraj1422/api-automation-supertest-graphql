@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "testKey": "TEST-123",
+      "status": "PASSED",
+      "comment": "Executed by Mocha test: TEST-123:should create a post",
+      "start": "2025-07-14T03:17:11.690Z",
+      "finish": "2025-07-14T03:17:12.580Z",
+      "evidence": []
+    },
+    {
+      "testKey": "TEST-567",
+      "status": "PASSED",
+      "comment": "Executed by Mocha test: TEST-567:should get the post",
+      "start": "2025-07-14T03:17:11.690Z",
+      "finish": "2025-07-14T03:17:12.529Z",
+      "evidence": []
+    }
+  ],
+  "info": {
+    "summary": "Mocha Automated Test Execution - GraphQL",
+    "description": "Imported from Mochawesome JSON",
+    "startDate": "2025-07-14T03:17:11.690Z",
+    "finishDate": "2025-07-14T03:17:13.438Z",
+    "testEnvironments": [
+      "TEST"
+    ]
+  }
+}
